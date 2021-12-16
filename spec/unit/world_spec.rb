@@ -3,15 +3,22 @@
 require 'spec_helper'
 
 describe 'The World' do
-  context 'when it is empty' do
-    subject { World.new(100, 110) }
+  let(:rows) { 100 }
+  let(:cols) { 110 }
+  let(:cell_size) { 11 }
+  subject { World.new(rows: rows, cols: cols, cell_size: cell_size) }
 
+  context 'when it is empty' do
     it 'should have 100 rows' do
-      expect(subject.rows).to eq 100
+      expect(subject.rows).to eq rows
     end
 
-    it 'should have 100 cols' do
-      expect(subject.cols).to eq 110
+    it 'should have 110 cols' do
+      expect(subject.cols).to eq cols
+    end
+
+    it 'should have a 11 cell_size' do
+      expect(subject.cell_size).to eq cell_size
     end
 
     it 'has all internal cells empty' do
@@ -21,73 +28,47 @@ describe 'The World' do
         end
       end
     end
+  end
 
-    context 'adding an object occupies a cell' do
-      let(:row) { subject.rows - 1 }
-      let(:col) { subject.cols - 1 }
-      let(:object) { 'x' }
-      before { subject.add(row, col, object) }
+  context 'adding an object occupies a cell' do
+    let(:row) { subject.rows - 1 }
+    let(:col) { subject.cols - 1 }
+    let(:object) { 'x' }
+    before { subject.set!(row, col, object) }
 
-      it 'used cell is not empty' do
-        expect(subject.empty?(row, col)).to be false
-      end
-
-      it 'used cell is occupied' do
-        expect(subject.occuppied?(row, col)).to be true
-      end
-
-      it 'returns the object given the coordinates' do
-        expect(subject.get(row, col)).to eq object
-      end
+    it 'used cell is not empty' do
+      expect(subject.empty?(row, col)).to be false
     end
 
-    it 'can add an object on an empty cell' do
-      expect(subject.add(rand(subject.rows), rand(subject.cols), 'x')).to be true
+    it 'used cell is occupied' do
+      expect(subject.occuppied?(row, col)).to be true
     end
 
-    context 'can move an object to an empty cell' do
-      let(:row) { subject.rows / 2 }
-      let(:col) { subject.cols / 2 }
-      let(:object) { 'x' }
+    it 'returns the object given the coordinates' do
+      expect(subject.get(row, col)).to eq object
+    end
+  end
 
-      it 'can move up' do
-        subject.add(row, col, object)
-        movement_result = subject.move(row, col, row - 1, col)
+  context 'adding objects' do
+    it 'on an empty cell' do
+      expect(subject.set!(rand(subject.rows), rand(subject.cols), 'x')).to be true
+    end
+  end
 
-        expect(movement_result).to be true
-        expect(subject.empty?(row, col)).to be true
-        expect(subject.empty?(row - 1, col)).to be false
-        expect(subject.get(row - 1, col)).to be object
-      end
+  context 'can move an object to an empty cell' do
+    let(:row) { subject.rows / 2 }
+    let(:col) { subject.cols / 2 }
+    let(:object) { 'x' }
 
-      it 'can move down' do
-        subject.add(row, col, object)
-        movement_result = subject.move(row, col, row + 1, col)
-
-        expect(movement_result).to be true
-        expect(subject.empty?(row, col)).to be true
-        expect(subject.empty?(row + 1, col)).to be false
-        expect(subject.get(row + 1, col)).to be object
-      end
-
-      it 'can move left' do
-        subject.add(row, col, object)
-        movement_result = subject.move(row, col, row, col - 1)
+    [[-1, 0], [1, 0], [0, -1], [0, 1]].each do |m|
+      it "can move adding #{m}" do
+        subject.set!(row, col, object)
+        movement_result = subject.move(row, col, row + m[0], col + m[1])
 
         expect(movement_result).to be true
         expect(subject.empty?(row, col)).to be true
-        expect(subject.empty?(row, col - 1)).to be false
-        expect(subject.get(row, col - 1)).to be object
-      end
-
-      it 'can move right' do
-        subject.add(row, col, object)
-        movement_result = subject.move(row, col, row, col + 1)
-
-        expect(movement_result).to be true
-        expect(subject.empty?(row, col)).to be true
-        expect(subject.empty?(row, col + 1)).to be false
-        expect(subject.get(row, col + 1)).to be object
+        expect(subject.empty?(row + m[0], col + m[1])).to be false
+        expect(subject.get(row + m[0], col + m[1])).to be object
       end
     end
   end
