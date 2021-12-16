@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # world_spec.rb
 
 require 'spec_helper'

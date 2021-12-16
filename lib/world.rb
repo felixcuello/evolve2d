@@ -1,5 +1,14 @@
-# lib/world.rb
+# frozen_string_literal: true
 
+# TODO:
+#   - object: must be a predefined thing, such as:
+#       - :amoeba + :color
+#       - :wall
+#       - .... ?
+
+require 'ruby2d'
+
+# This class manages the world and all the objects in the world
 class World
   attr_reader :rows, :cols, :cell_size
 
@@ -12,6 +21,19 @@ class World
     @cell_size = cell_size
 
     @cell = {}
+  end
+
+  # It spins the world
+  def spin!
+    Ruby2D::Window.set background: 'white',
+                       width: cols * cell_size,
+                       height: rows * cell_size
+
+    Ruby2D::Window.update do
+      Ruby2D::Window.clear
+    end
+
+    Ruby2D::Window.show
   end
 
   # given: a position (row, col)
