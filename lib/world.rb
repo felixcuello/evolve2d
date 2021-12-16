@@ -70,14 +70,6 @@ class World
     true
   end
 
-  private
-
-  # given: a position(row, col)
-  # returns: the key to be used
-  def cell_key(row, col)
-    [row, col]
-  end
-
   # given: a position(row, col)
   # returns:
   #   - true: if it's out of the world boundaries
@@ -89,5 +81,13 @@ class World
     return true if col >= cols
 
     false
+  end
+
+  private
+
+  # given: a position(row, col)
+  # returns: the key to be used
+  def cell_key(row, col)
+    [row, col]
   end
 end

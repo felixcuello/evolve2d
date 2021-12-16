@@ -30,6 +30,21 @@ describe 'The World' do
     end
   end
 
+  context 'when checking the boundaries' do
+    it 'negative rows or cols are out of boundaries' do
+      expect(subject.out_of_boundaries?(-1, 0)).to be true
+      expect(subject.out_of_boundaries?(0, -1)).to be true
+    end
+
+    it 'rows and beyond are is out of boundaries' do
+      expect(subject.out_of_boundaries?(rows, 0)).to be true
+    end
+
+    it 'cols and beyond are is out of boundaries' do
+      expect(subject.out_of_boundaries?(0, cols)).to be true
+    end
+  end
+
   context 'adding an object occupies a cell' do
     let(:row) { subject.rows - 1 }
     let(:col) { subject.cols - 1 }
@@ -61,7 +76,7 @@ describe 'The World' do
     let(:object) { 'x' }
 
     [[-1, 0], [1, 0], [0, -1], [0, 1]].each do |m|
-      it "can move adding #{m}" do
+      it "can move from location to #{m}" do
         subject.set!(row, col, object)
         movement_result = subject.move(row, col, row + m[0], col + m[1])
 
