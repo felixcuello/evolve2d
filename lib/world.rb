@@ -84,9 +84,9 @@ class World
   #   - false: otherwise
   def out_of_boundaries?(row, col)
     return true if row.negative?
-    return true if row > rows
+    return true if row >= rows
     return true if col.negative?
-    return true if col > cols
+    return true if col >= cols
 
     false
   end
