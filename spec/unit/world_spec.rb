@@ -78,7 +78,7 @@ describe 'The World' do
     [[-1, 0], [1, 0], [0, -1], [0, 1]].each do |m|
       it "can move from location to #{m}" do
         subject.set!(row, col, object)
-        movement_result = subject.move(row, col, row + m[0], col + m[1])
+        movement_result = subject.move!(row, col, row + m[0], col + m[1])
 
         expect(movement_result).to be true
         expect(subject.empty?(row, col)).to be true

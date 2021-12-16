@@ -60,7 +60,7 @@ class World
   # returns:
   #   - true: if the object could be moved
   #   - false: otherwise
-  def move(orig_row, orig_col, dest_row, dest_col)
+  def move!(orig_row, orig_col, dest_row, dest_col)
     object = get(orig_row, orig_col)
 
     return false unless set!(dest_row, dest_col, object)
