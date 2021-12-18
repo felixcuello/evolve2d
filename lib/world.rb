@@ -56,7 +56,7 @@ class World
   # returns:
   #   - true: if the object could be added
   #   - false: otherwise
-  def set!(row, col, object)
+  def set!(row:, col:, object:)
     return false if out_of_boundaries?(row, col)
     return false if occuppied?(row, col)
 
@@ -67,7 +67,7 @@ class World
   # given: a position(row, col)
   # returns:
   #   - the object stored in that position (or nil)
-  def get(row, col)
+  def get(row:, col:)
     @cell[cell_key(row, col)]
   end
 
@@ -83,9 +83,9 @@ class World
   #   - true: if the object could be moved
   #   - false: otherwise
   def move!(orig_row, orig_col, dest_row, dest_col)
-    object = get(orig_row, orig_col)
+    object = get(row: orig_row, col: orig_col)
 
-    return false unless set!(dest_row, dest_col, object)
+    return false unless set!(row: dest_row, col: dest_col, object: object)
 
     delete!(orig_row, orig_col)
 

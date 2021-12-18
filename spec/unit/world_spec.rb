@@ -50,7 +50,7 @@ describe 'The World' do
     let(:row) { subject.rows - 1 }
     let(:col) { subject.cols - 1 }
     let(:object) { 'x' }
-    before { subject.set!(row, col, object) }
+    before { subject.set!(row: row, col: col, object: object) }
 
     it 'used cell is not empty' do
       expect(subject.empty?(row, col)).to be false
@@ -61,13 +61,15 @@ describe 'The World' do
     end
 
     it 'returns the object given the coordinates' do
-      expect(subject.get(row, col)).to eq object
+      expect(subject.get(row: row, col: col)).to eq object
     end
   end
 
   context 'adding objects' do
     it 'on an empty cell' do
-      expect(subject.set!(rand(subject.rows), rand(subject.cols), 'x')).to be true
+      expect(subject.set!(row: rand(subject.rows),
+                          col: rand(subject.cols),
+                          object: 'x')).to be true
     end
   end
 
@@ -78,13 +80,14 @@ describe 'The World' do
 
     [[-1, 0], [1, 0], [0, -1], [0, 1]].each do |m|
       it "can move from location to #{m}" do
-        subject.set!(row, col, object)
+        subject.set!(row: row, col: col, object: object)
         movement_result = subject.move!(row, col, row + m[0], col + m[1])
 
         expect(movement_result).to be true
         expect(subject.empty?(row, col)).to be true
         expect(subject.empty?(row + m[0], col + m[1])).to be false
-        expect(subject.get(row + m[0], col + m[1])).to be object
+        expect(subject.get(row: row + m[0],
+                           col: col + m[1])).to be object
       end
     end
   end
