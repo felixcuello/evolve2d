@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
+require 'basic_object'
+
 # This class represent one of the creatures that live in the world
-class Creature
+class Creature < BasicObject
   attr_reader :age, # Age is measured in the amount of updates
               :row,
               :col
