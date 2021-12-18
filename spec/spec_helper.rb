@@ -2,5 +2,6 @@ require 'bundler'
 
 $:.unshift(File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib')))
 
-require 'world'
+require 'brick'
 require 'creature'
+require 'world'
