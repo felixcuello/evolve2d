@@ -13,7 +13,15 @@ describe 'Brick' do
 
       object = world.get(row: rows / 2, col: cols / 2)
 
-      puts object.inspect
+      expect(object).to be_truthy
+      expect(object).to eq subject
+    end
+
+    it 'must update!, and do nothing' do
+      world.set!(row: rows / 2, col: cols / 2, object: subject)
+      object = world.get(row: rows / 2, col: cols / 2)
+
+      object.update!.update!.update!
 
       expect(object).to be_truthy
       expect(object).to eq subject
