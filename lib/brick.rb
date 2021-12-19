@@ -1,12 +1,17 @@
 # frozen_string_literal: true
 
-require 'basic_object'
-
 # This class represent one of the creatures that live in the world
-class Brick < BasicObject
-  attr_reader :color
+class Brick
+  attr_reader :row, :col, :color
 
-  def initialize
-    @color = 'gray'
+  def initialize(world, row, col, color = 'gray')
+    @world = world
+    @row = row
+    @col = col
+    @color = color
+  end
+
+  def update!
+    self
   end
 end

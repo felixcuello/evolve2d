@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
-require 'basic_object'
-
 # This class represent one of the creatures that live in the world
-class Creature < BasicObject
+class Creature
   attr_reader :age, # Age is measured in the amount of updates
               :row,
-              :col
+              :col,
+              :color
 
-  def initialize(world:, row:, col:, color: 'random')
-    @age = 0
-    @color = color
+  def initialize(world:, row:, col:, color: 'red')
     @world = world
     @row = row
     @col = col
+    @color = color
+
+    @age = 0
   end
 
   # Updates the creature
