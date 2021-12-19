@@ -14,4 +14,8 @@ class Brick
   def update!
     self
   end
+
+  def move!(row, col)
+    # does not move... it's a brick
+  end
 end

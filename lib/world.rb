@@ -21,7 +21,10 @@ class World
     @object_size = object_size
     @world_refresh_rate = 0.2 # in seconds
 
-    @object = {}
+    @object = []
+    rows.times do
+      @object << Array.new(cols)
+    end
   end
 
   # It spins the world
@@ -44,7 +47,7 @@ class World
   #   - true:  if the position is empty
   #   - false: otherwise
   def empty?(row, col)
-    !occuppied?(row, col)
+    !@object[row][col]
   end
 
   # given: a position (row, col)
@@ -52,7 +55,7 @@ class World
   #   - false: if the position is occuppied
   #   - true: otherwise
   def occuppied?(row, col)
-    !!@object[object_key(row, col)]
+    !empty?(row, col)
   end
 
   # given: a position(row,col) and an object
@@ -63,7 +66,7 @@ class World
     return false if out_of_boundaries?(row, col)
     return false if occuppied?(row, col)
 
-    @object[object_key(row, col)] = object
+    @object[row][col] = object
     true
   end
 
@@ -71,14 +74,14 @@ class World
   # returns:
   #   - the object stored in that position (or nil)
   def get(row:, col:)
-    @object[object_key(row, col)]
+    @object[row][col]
   end
 
   # given: a position(row, col)
   # returns:
   #   - it deletes the object at that position (no questions asked)
   def delete!(row, col)
-    @object.delete(object_key(row, col))
+    @object[row][col] = nil
   end
 
   # given: an origination position(orig_row, orig_col) and a destination position (dest_row, dest_col)
@@ -90,6 +93,7 @@ class World
 
     return false unless set!(row: dest_row, col: dest_col, object: object)
 
+    object.move!(dest_row, dest_col)
     delete!(orig_row, orig_col)
 
     true
@@ -118,10 +122,10 @@ class World
 
   # updates all the objects
   def update_all!
-    @object.keys.each do |k|
-      draw!(row: k[0],
-            col: k[1],
-            color: @object[k].color)
+    0.upto(@rows - 1) do |row|
+      0.upto(@cols - 1) do |col|
+        @object[row][col].update!
+      end
     end
   end
 

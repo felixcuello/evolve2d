@@ -5,7 +5,7 @@ require 'ruby2d'
 $:.unshift(File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib')))
 Dir['lib/*'].map { |f| f.gsub(%r{^lib/},'') }.sort.each { |file| require file }
 
-world = World.new(rows: 80, cols: 120)
+world = World.new(rows: 160, cols: 240)
 
 creatures_number = 50
 creatures_number.times do

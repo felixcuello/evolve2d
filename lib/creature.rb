@@ -16,6 +16,11 @@ class Creature
     @age = 0
   end
 
+  def move!(new_row, new_col)
+    @row = new_row
+    @col = new_col
+  end
+
   # Updates the creature
   def update!
     @age += 1

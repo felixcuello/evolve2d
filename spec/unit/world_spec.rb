@@ -46,10 +46,10 @@ describe 'The World' do
     end
   end
 
-  context 'adding an object occupies a object' do
+  context 'adding an object occupies a place' do
     let(:row) { subject.rows - 1 }
     let(:col) { subject.cols - 1 }
-    let(:object) { 'x' }
+    let(:object) { Brick.new(subject, row, col) }
     before { subject.set!(row: row, col: col, object: object) }
 
     it 'used object is not empty' do
@@ -76,7 +76,7 @@ describe 'The World' do
   context 'can move an object to an empty object' do
     let(:row) { subject.rows / 2 }
     let(:col) { subject.cols / 2 }
-    let(:object) { 'x' }
+    let(:object) { Brick.new(subject, row, col) }
 
     [[-1, 0], [1, 0], [0, -1], [0, 1]].each do |m|
       it "can move from location to #{m}" do
