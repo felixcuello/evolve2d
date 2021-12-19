@@ -10,27 +10,30 @@ require 'ruby2d'
 
 # This class manages the world and all the objects in the world
 class World
-  attr_reader :rows, :cols, :cell_size
+  attr_reader :rows, :cols, :object_size
 
   # initializes the world
   #   - rows: the amount of rows of this world
   #   - cols: the amount of cols of this world
-  def initialize(rows:, cols:, cell_size: 10)
+  def initialize(rows:, cols:, object_size: 10)
     @rows = rows
     @cols = cols
-    @cell_size = cell_size
+    @object_size = object_size
+    @world_refresh_rate = 0.2 # in seconds
 
-    @cell = {}
+    @object = {}
   end
 
   # It spins the world
   def spin!
     Ruby2D::Window.set background: 'white',
-                       width: cols * cell_size,
-                       height: rows * cell_size
+                       width: cols * object_size,
+                       height: rows * object_size
 
     Ruby2D::Window.update do
       Ruby2D::Window.clear
+      update_all!
+      sleep @world_refresh_rate
     end
 
     Ruby2D::Window.show
@@ -41,7 +44,7 @@ class World
   #   - true:  if the position is empty
   #   - false: otherwise
   def empty?(row, col)
-    @cell[cell_key(row, col)].nil?
+    !occuppied?(row, col)
   end
 
   # given: a position (row, col)
@@ -49,7 +52,7 @@ class World
   #   - false: if the position is occuppied
   #   - true: otherwise
   def occuppied?(row, col)
-    !empty?(row, col)
+    !!@object[object_key(row, col)]
   end
 
   # given: a position(row,col) and an object
@@ -60,7 +63,7 @@ class World
     return false if out_of_boundaries?(row, col)
     return false if occuppied?(row, col)
 
-    @cell[cell_key(row, col)] = object
+    @object[object_key(row, col)] = object
     true
   end
 
@@ -68,14 +71,14 @@ class World
   # returns:
   #   - the object stored in that position (or nil)
   def get(row:, col:)
-    @cell[cell_key(row, col)]
+    @object[object_key(row, col)]
   end
 
   # given: a position(row, col)
   # returns:
   #   - it deletes the object at that position (no questions asked)
   def delete!(row, col)
-    @cell.delete(cell_key(row, col))
+    @object.delete(object_key(row, col))
   end
 
   # given: an origination position(orig_row, orig_col) and a destination position (dest_row, dest_col)
@@ -109,7 +112,22 @@ class World
 
   # given: a position(row, col)
   # returns: the key to be used
-  def cell_key(row, col)
+  def object_key(row, col)
     [row, col]
+  end
+
+  # updates all the objects
+  def update_all!
+    @object.keys.each do |k|
+      draw!(row: k[0],
+            col: k[1],
+            color: @object[k].color)
+    end
+  end
+
+  def draw!(row:, col:, color:)
+    x = row * @object_size
+    y = col * @object_size
+    Square.new(x: x, y: y, size: @object_size, color: color)
   end
 end

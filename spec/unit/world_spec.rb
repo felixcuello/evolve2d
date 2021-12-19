@@ -6,8 +6,8 @@ require 'spec_helper'
 describe 'The World' do
   let(:rows) { 100 }
   let(:cols) { 110 }
-  let(:cell_size) { 11 }
-  subject { World.new(rows: rows, cols: cols, cell_size: cell_size) }
+  let(:object_size) { 11 }
+  subject { World.new(rows: rows, cols: cols, object_size: object_size) }
 
   context 'when it is empty' do
     it 'should have 100 rows' do
@@ -18,11 +18,11 @@ describe 'The World' do
       expect(subject.cols).to eq cols
     end
 
-    it 'should have a 11 cell_size' do
-      expect(subject.cell_size).to eq cell_size
+    it 'should have a 11 object_size' do
+      expect(subject.object_size).to eq object_size
     end
 
-    it 'has all internal cells empty' do
+    it 'has all internal objects empty' do
       0.upto(subject.rows - 1) do |row|
         0.upto(subject.cols - 1) do |col|
           expect(subject.empty?(row, col)).to be true
@@ -46,17 +46,17 @@ describe 'The World' do
     end
   end
 
-  context 'adding an object occupies a cell' do
+  context 'adding an object occupies a object' do
     let(:row) { subject.rows - 1 }
     let(:col) { subject.cols - 1 }
     let(:object) { 'x' }
     before { subject.set!(row: row, col: col, object: object) }
 
-    it 'used cell is not empty' do
+    it 'used object is not empty' do
       expect(subject.empty?(row, col)).to be false
     end
 
-    it 'used cell is occupied' do
+    it 'used object is occupied' do
       expect(subject.occuppied?(row, col)).to be true
     end
 
@@ -66,14 +66,14 @@ describe 'The World' do
   end
 
   context 'adding objects' do
-    it 'on an empty cell' do
+    it 'on an empty object' do
       expect(subject.set!(row: rand(subject.rows),
                           col: rand(subject.cols),
                           object: 'x')).to be true
     end
   end
 
-  context 'can move an object to an empty cell' do
+  context 'can move an object to an empty object' do
     let(:row) { subject.rows / 2 }
     let(:col) { subject.cols / 2 }
     let(:object) { 'x' }
