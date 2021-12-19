@@ -12,14 +12,17 @@ require 'ruby2d'
 class World
   attr_reader :rows, :cols, :object_size
 
+  OBJECT_SIZE = 5
+  REFRESH_RATE = 0.2 # in seconds
+
   # initializes the world
   #   - rows: the amount of rows of this world
   #   - cols: the amount of cols of this world
-  def initialize(rows:, cols:, object_size: 10)
+  def initialize(rows:, cols:, object_size: OBJECT_SIZE)
     @rows = rows
     @cols = cols
     @object_size = object_size
-    @world_refresh_rate = 0.2 # in seconds
+    @world_refresh_rate = REFRESH_RATE
 
     @object = []
     rows.times do
@@ -124,7 +127,13 @@ class World
   def update_all!
     0.upto(@rows - 1) do |row|
       0.upto(@cols - 1) do |col|
-        @object[row][col].update!
+        next if empty?(row, col)
+
+        object = @object[row][col]
+        draw!(row: row, col: col, color: object.color)
+
+        #@object[row][col].update!
+        #@object.rollback_move! unless move!(row, col, @object.row, @object.col)
       end
     end
   end

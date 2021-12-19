@@ -8,7 +8,7 @@ describe 'Creature' do
   let(:world) { World.new(rows: 2 * row, cols: 2 * col) }
 
   context 'is in he world' do
-    subject { Creature.new(world: world, row: row, col: col) }
+    subject { Creature.new(row: row, col: col) }
 
     it 'must retrieve the creature correctly' do
       world.set!(row: row, col: col, object: subject)
@@ -21,7 +21,7 @@ describe 'Creature' do
   end
 
   context 'without neuron conections' do
-    subject { Creature.new(world: world, row: row, col: col) }
+    subject { Creature.new(row: row, col: col) }
 
     it 'After 3 cycles it must be 3 in age' do
       subject.update!.update!.update!
