@@ -1,41 +1,22 @@
-# frozen_string_literal: true
+require 'basic_object'
 
-# This class represent one of the creatures that live in the world
-class Creature
-  attr_reader :age, # Age is measured in the amount of updates
-              :row,
-              :col,
-              :color
+class Creature < BasicObject
+  def initialize(world:)
+    super
 
-  AVAILABLE_COLORS = ['red', 'blue', 'green', 'yellow', 'black']
+    r = ::Random.rand(256)
+    g = ::Random.rand(256)
+    b = ::Random.rand(256)
 
-  def initialize(row:, col:, color: nil)
-    @row = row
-    @col = col
-    @color = AVAILABLE_COLORS.sample if color.nil?
-
-    @age = 0
+    @color = ::Kernel.sprintf('#%02x%02x%02x', r, g, b)
   end
 
-  # Moves the object to a different location
-  def move!(new_row, new_col)
-    @old_row = @row
-    @old_col = @col
-
-    @row = new_row
-    @col = new_col
+  def color
+    @color
   end
 
-  # Rollbacks the move
-  def rollback_move!
-    @row = @old_row
-    @col = @old_col
-  end
-
-  # Updates the creature
   def update!
-    @age += 1
-
-    self
+    @col += (::Random.rand(2) == 0 ? 1 : -1) * ::Random.rand(2)
+    @row += (::Random.rand(2) == 0 ? 1 : -1) * ::Random.rand(2)
   end
 end
