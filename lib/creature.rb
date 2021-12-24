@@ -1,25 +1,22 @@
-# frozen_string_literal: true
+require 'basic_object'
 
-# This class represent one of the creatures that live in the world
-class Creature
-  attr_reader :age, # Age is measured in the amount of updates
-              :row,
-              :col,
-              :color
+class Creature < BasicObject
+  def initialize(world:)
+    super
 
-  def initialize(world:, row:, col:, color: 'red')
-    @world = world
-    @row = row
-    @col = col
-    @color = color
+    r = ::Random.rand(256)
+    g = ::Random.rand(256)
+    b = ::Random.rand(256)
 
-    @age = 0
+    @color = ::Kernel.sprintf('#%02x%02x%02x', r, g, b)
   end
 
-  # Updates the creature
-  def update!
-    @age += 1
+  def color
+    @color
+  end
 
-    self
+  def update!
+    @col += (::Random.rand(2) == 0 ? 1 : -1) * ::Random.rand(2)
+    @row += (::Random.rand(2) == 0 ? 1 : -1) * ::Random.rand(2)
   end
 end
