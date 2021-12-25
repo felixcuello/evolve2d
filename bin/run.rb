@@ -3,12 +3,13 @@
 require 'ruby2d'
 
 $:.unshift(File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib')))
-Dir['lib/*'].map { |f| f.gsub(%r{^lib/}, '') }.sort.each { |file| require file }
+Dir['lib/**/*.rb'].map { |f| f.gsub(%r{^lib/}, '') }.sort.each { |file| require file }
 
-WORLD_ROWS = 180
-WORLD_COLS = 200
-OBJECT_SIZE = 5
-NUMBER_OF_CREATURES = 500
+WORLD_ROWS = 120
+WORLD_COLS = 180
+OBJECT_SIZE = 7
+NUMBER_OF_CREATURES = ARGV[0] ? ARGV[0].to_i : 1000
+SPIN_DELAY = 0
 
 world = World.new(rows: WORLD_ROWS,
                   cols: WORLD_COLS,
@@ -20,4 +21,4 @@ NUMBER_OF_CREATURES.times do
 end
 
 world.randomize!(objects: objects)
-world.spin!
+world.spin!(spin_delay: SPIN_DELAY)

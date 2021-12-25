@@ -3,8 +3,6 @@ require 'ruby2d'
 #  This is the class that controls the world for the creatures
 # --------------------------------------------------------------------------
 class World
-  SPIN_DELAY = 0.01 # In seconds
-
   attr_reader :rows, :cols, :object_size
 
   #  Creates the world
@@ -43,7 +41,7 @@ class World
 
   #  Spins the world (infinite loop)
   # -----------------------------------------------
-  def spin!
+  def spin!(spin_delay:)
     Ruby2D::Window.set(background: 'white',
                        width: cols * object_size,
                        height: rows * object_size)
@@ -63,7 +61,7 @@ class World
         object.update!
       end
 
-      sleep SPIN_DELAY
+      sleep spin_delay
     end
 
     Ruby2D::Window.show
@@ -83,5 +81,26 @@ class World
     @grid[row][col] = object
 
     true
+  end
+
+  #  Moves an object from one place to the other
+  # -----------------------------------------------
+  def move!(object, from_row, from_col, to_row, to_col)
+    return false if invalid_position?(to_row, to_col)
+    return false unless empty?(to_row, to_col)
+
+    @grid[from_row][from_col] = 0
+    @grid[to_row][to_col] = object
+  end
+
+  #  Returns true if the desired row, col is invalid
+  # -----------------------------------------------
+  def invalid_position?(row, col)
+    return true if row < 0
+    return true if row >= rows
+    return true if col < 0
+    return true if col >= cols
+
+    false
   end
 end
