@@ -1,46 +1,39 @@
-require 'neuron/cycler'
-require 'neuron/minus_one'
-require 'neuron/one'
-require 'neuron/random_trinary'
-require 'neuron/zero'
+require 'neuron/movement'
 
 class Brain
-  LAYER_0 = 0
-  LAYER_1 = 1
-  LAYER_2 = 2
+  MOVEMENT_NEURONS = [
+    ::Neuron::Movement.up,
+    ::Neuron::Movement.down,
+    ::Neuron::Movement.left,
+    ::Neuron::Movement.right,
+    ::Neuron::Movement.up_left,
+    ::Neuron::Movement.up_right,
+    ::Neuron::Movement.down_left,
+    ::Neuron::Movement.down_right,
+    ::Neuron::Movement.random,
+    ::Neuron::Movement.random_jump,
+  ]
 
-  def initialize(output_neurons:, genes: '')
-    @neurons = [[], [], []]
+  def initialize(movement_connections: Array.new(number_of_movement_neurons, false))
+    @movement_connections = movement_connections
+  end
 
-    @neurons[LAYER_0] << ::Neuron.cycler           # Cycles
-    @neurons[LAYER_0] << ::Neuron.zero             # Emits always 0
-    @neurons[LAYER_0] << ::Neuron.one              # Emits always 1
-    @neurons[LAYER_0] << ::Neuron.minus_one        # Emits always -1
-    @neurons[LAYER_0] << ::Neuron.random_trinary   # Emits a random [-1, 0, 1]
+  def self.number_of_movement_neurons
+    MOVEMENT_NEURONS.count
+  end
 
-    @memo_neuron = {}
-    @output_neurons = output_neurons
-    @output_neurons.times do |n_neuron|
-      composition = []
-      @neurons[LAYER_0].each do |e|
-        composition << e if ::Random.rand(2).zero? # Acá elegimos las neuronas de input que van a estar presentes
-      end
-
-      ##  ESTO es el seleccionador de neuronas
-      ##  debería hacer una suerte de composición de funciones, en lugar de elegir una de las que se eligieron arriba
-      ##  pero eso es para la siguiente iteración
-      @neurons[LAYER_2] << lambda do
-        @memo_neuron[n_neuron] ||= ::Random.rand(@neurons[LAYER_0].count)
-        @neurons[LAYER_0][@memo_neuron[n_neuron]].call
+  def move
+    if !defined?(@genes)
+      @genes = []
+      MOVEMENT_NEURONS.each_with_index do |mn, i|
+        @genes << mn if @movement_connections[i]
       end
     end
-  end
 
-  def number_of_generators
-    @neurons[LAYER_0].count
-  end
-
-  def think(output_neuron)
-    @neurons[LAYER_2][output_neuron].call
+    result = [0, 0]
+    @genes.each do |gene|
+      result[0], result[1] = gene.call(result)
+    end
+    result
   end
 end

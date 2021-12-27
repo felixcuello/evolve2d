@@ -34,6 +34,11 @@ class World
         col = rand(cols)
       end
 
+      # FIXME: This is just for testing purposes
+      # row = rows / 2
+      # col = cols / 2
+      # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
       object.place(row, col)
       @grid[object.row][object.col] = object
     end

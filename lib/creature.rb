@@ -5,12 +5,11 @@ require 'basic_object'
 #    It has a very small brain, with some output neurons that can be used
 #    to create behavior to the creature
 class Creature < BasicObject
-  OUTPUT_NEURONS = 2
-
   def initialize(world:)
     super
 
-    @brain = ::Brain.new(output_neurons: OUTPUT_NEURONS)
+    @movement_neuron_connections = generate_movement_neuron_connections
+    @brain = ::Brain.new(movement_connections: @movement_neuron_connections)
 
     r = ::Random.rand(256)
     g = ::Random.rand(256)
@@ -20,20 +19,28 @@ class Creature < BasicObject
     @color = ::Kernel.sprintf('#%02x%02x%02x', r, g, b)
   end
 
+  def generate_movement_neuron_connections
+    result = []
+    ::Brain.number_of_movement_neurons.times { result << ::Random.rand(2).zero? }
+    result
+  end
+
   def color
     @color
   end
 
   def update!
-    @a ||= ::Random.rand(OUTPUT_NEURONS)
-    @b ||= ::Random.rand(OUTPUT_NEURONS)
+    @row_update, @col_update = @brain.move
 
-    @row_update = @brain.think(@a)
-    @col_update = @brain.think(@b)
+    # ::Kernel.puts "a=#{@row_update} / b=#{@col_update}"
 
     return unless @world.move!(self, @row, @col, @row + @row_update, @col + @col_update)
 
     @col += @col_update
     @row += @row_update
+  end
+
+  def to_s
+    puts "#{@movement_neuron_connections.join(' ')},#{@color}"
   end
 end

@@ -7,7 +7,7 @@ Dir['lib/**/*.rb'].map { |f| f.gsub(%r{^lib/}, '') }.sort.each { |file| require 
 
 WORLD_ROWS = 120
 WORLD_COLS = 180
-OBJECT_SIZE = 7
+OBJECT_SIZE = 6
 NUMBER_OF_CREATURES = ARGV[0] ? ARGV[0].to_i : 1000
 SPIN_DELAY = 0
 
