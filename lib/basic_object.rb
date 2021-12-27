@@ -1,7 +1,7 @@
 class BasicObject
   attr_reader :row, :col
 
-  def initialize(world:)
+  def initialize(world:, movement_neuron_connections:, color:)
     @world = world
     @row = row
     @col = col
@@ -18,5 +18,9 @@ class BasicObject
 
   def update!
     # Do nothing
+  end
+
+  def to_s
+    ''
   end
 end
