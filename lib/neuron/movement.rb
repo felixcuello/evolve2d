@@ -1,5 +1,9 @@
 module Neuron
   module Movement
+    def self.still
+      ->(pos) { [pos[0], pos[1]] }
+    end
+
     def self.up(speed = 0.5)
       ->(pos) { [pos[0], pos[1] - speed] }
     end
@@ -32,7 +36,7 @@ module Neuron
       ->(pos) { [pos[0] + speed, pos[1] + speed] }
     end
 
-    def self.random_jump(speed = 2)
+    def self.random_jump(speed = 0.5)
       ->(pos) {
         if rand(100).zero?
           [-pos[0] * speed, -pos[1] * speed]

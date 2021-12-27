@@ -10,12 +10,14 @@ class Brain
     ::Neuron::Movement.up_right,
     ::Neuron::Movement.down_left,
     ::Neuron::Movement.down_right,
+    ::Neuron::Movement.still,
     ::Neuron::Movement.random,
     ::Neuron::Movement.random_jump,
   ]
 
-  def initialize(movement_connections: Array.new(number_of_movement_neurons, false))
+  def initialize(world:, movement_connections: Array.new(number_of_movement_neurons, false))
     @movement_connections = movement_connections
+    @world = world
   end
 
   def self.number_of_movement_neurons
@@ -23,16 +25,17 @@ class Brain
   end
 
   def move
-    if !defined?(@genes)
-      @genes = []
+    if !defined?(@movement_neurons)
+      @movement_neurons = []
+
       MOVEMENT_NEURONS.each_with_index do |mn, i|
-        @genes << mn if @movement_connections[i]
+        @movement_neurons << mn if @movement_connections[i]
       end
     end
 
     result = [0, 0]
-    @genes.each do |gene|
-      result[0], result[1] = gene.call(result)
+    @movement_neurons.each do |movement_neuron|
+      result[0], result[1] = movement_neuron.call(result)
     end
     result
   end

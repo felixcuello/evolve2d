@@ -3,7 +3,7 @@ require 'ruby2d'
 #  This is the class that controls the world for the creatures
 # --------------------------------------------------------------------------
 class World
-  attr_reader :rows, :cols, :object_size
+  attr_reader :rows, :cols, :object_size, :objects
 
   #  Creates the world
   # -----------------------------------------------
@@ -23,15 +23,16 @@ class World
   #  Randomize places for the objects
   # -----------------------------------------------
   def randomize!(objects: [])
+    border_space = 5
     @objects = objects
 
     @objects.each do |object|
-      row = rand(rows)
-      col = rand(cols)
+      row = rand(border_space..(rows - border_space).to_i)
+      col = rand(border_space..(cols - border_space).to_i)
 
       until empty?(row, col)
-        row = rand(rows)
-        col = rand(cols)
+        row = rand(border_space..(rows - border_space).to_i)
+        col = rand(border_space..(cols - border_space).to_i)
       end
 
       # FIXME: This is just for testing purposes
@@ -46,7 +47,7 @@ class World
 
   #  Spins the world (infinite loop)
   # -----------------------------------------------
-  def spin!(spin_delay:)
+  def spin!(number_of_spins:, spin_delay:)
     Ruby2D::Window.set(background: 'white',
                        width: cols * object_size,
                        height: rows * object_size)
@@ -66,6 +67,18 @@ class World
         object.update!
       end
 
+      if @spins % (number_of_spins) == 0
+        File.open('dump.csv', 'w') do |f|
+          @objects.each do |object|
+            next if must_die(object)
+
+            f.write("#{object.to_s}\n")
+          end
+        end
+
+        exit
+      end
+
       sleep spin_delay
     end
 
@@ -76,6 +89,12 @@ class World
   # -----------------------------------------------
   def empty?(row, col)
     @grid[row][col] == 0
+  end
+
+  def must_die(object)
+    return true if object.col > 5
+
+    false
   end
 
   #  Places an object in a given row,col
@@ -91,6 +110,9 @@ class World
   #  Moves an object from one place to the other
   # -----------------------------------------------
   def move!(object, from_row, from_col, to_row, to_col)
+    to_row = to_row.to_i
+    to_col = to_col.to_i
+
     return false if invalid_position?(to_row, to_col)
     return false unless empty?(to_row, to_col)
 
